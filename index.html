@@ -84,6 +84,24 @@
   <p>Responsive to your site's theme (using inline script):</p>
   <pre><code id="snippet-responsive"></code></pre>
 
+  <h2>Start Your Own Webring</h2>
+  <p>Want to create your own webring? This project is open source. Fork the repository, update <code>sites.json</code> with your ring's name and members, and deploy to GitHub Pages.</p>
+  <ol class="steps" role="list">
+    <li>
+      <strong>Fork the repository</strong>
+      <a id="fork-link" href="#">Fork on GitHub</a> to get your own copy.
+    </li>
+    <li>
+      <strong>Customize your ring</strong>
+      Edit <code>sites.json</code> to set your ring's name, URL, and member sites. Update the <code>CNAME</code> file with your domain (or remove it to use the default GitHub Pages URL).
+    </li>
+    <li>
+      <strong>Enable GitHub Pages</strong>
+      Go to your fork's Settings &gt; Pages and deploy from the <code>main</code> branch. Your webring hub will be live automatically.
+    </li>
+  </ol>
+  <p><a id="github-link" href="#">View on GitHub</a></p>
+
   <footer>
     <p id="footer-text"></p>
   </footer>
@@ -107,6 +125,10 @@
 
         var repoLink = document.getElementById("repo-link");
         repoLink.href = repoUrl;
+
+        var githubUrl = ring.github || "#";
+        document.getElementById("github-link").href = githubUrl;
+        document.getElementById("fork-link").href = githubUrl + "/fork";
 
         document.getElementById("snippet").textContent =
           '<script src="' + ringUrl + '/webrung.js"></' + 'script>';
