@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.jpg" alt="Webrung" width="200">
+</p>
+
 # Webrung
 
 A customizable webring system. Members add a small JavaScript widget to their site, connecting them to a ring of interesting pages visitors can explore.

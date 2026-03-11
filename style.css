@@ -13,6 +13,14 @@ body {
   padding: 40px 20px;
 }
 
+.logo {
+  margin-bottom: 16px;
+}
+
+.logo img {
+  border-radius: 16px;
+}
+
 h1 {
   font-size: 2em;
   margin-bottom: 8px;
