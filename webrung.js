@@ -181,7 +181,9 @@
 
   if (document.body) {
     init();
-  } else {
+  } else if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
   }
 })();
