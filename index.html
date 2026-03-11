@@ -154,12 +154,11 @@
           var img = document.createElement("img");
           var domain;
           try { domain = new URL(site.url).hostname; } catch (e) { domain = ""; }
-          img.src = domain
-            ? "https://www.google.com/s2/favicons?domain=" + domain + "&sz=64"
-            : "";
+          img.src = domain ? "https://" + domain + "/favicon.ico" : "";
           img.alt = "";
           img.width = 32;
           img.height = 32;
+          img.onerror = function () { this.style.display = "none"; };
 
           var info = document.createElement("div");
           info.className = "site-info";
