@@ -22,10 +22,12 @@
       <pre><code id="snippet"></code></pre>
     </li>
     <li>
-      <strong>Submit a pull request</strong>
-      Add your site to <code>sites.json</code> by
-      <a id="repo-link" href="#">editing it directly on GitHub</a>
-      with your site's URL, name, and description:
+      <strong>Fork the repository</strong>
+      <a id="fork-link-join" href="#">Fork on GitHub</a> to create your own copy of the project.
+    </li>
+    <li>
+      <strong>Add your site to <code>sites.json</code></strong>
+      You can <a id="repo-link" href="#">edit it directly on GitHub</a> or clone your fork locally. Add an entry to the <code>sites</code> array:
       <pre><code>{
   "url": "https://yoursite.com",
   "name": "Your Site Name",
@@ -33,9 +35,12 @@
 }</code></pre>
     </li>
     <li>
-      <strong>That's it!</strong>
-      Once your pull request is merged, your site will appear in the ring and
-      visitors can discover it through any other member site.
+      <strong>Open a pull request</strong>
+      Push your changes to your fork, then go to your fork on GitHub and click <strong>Compare &amp; pull request</strong> to submit your change back to the main repository.
+    </li>
+    <li>
+      <strong>Wait for review</strong>
+      A CI check will validate your <code>sites.json</code> formatting automatically. Once a maintainer approves and merges, your site will appear in the ring and visitors can discover it through any other member site.
     </li>
   </ol>
 
@@ -84,6 +89,41 @@
   <p>Responsive to your site's theme (using inline script):</p>
   <pre><code id="snippet-responsive"></code></pre>
 
+  <h2>Troubleshooting: Content Security Policy (CSP)</h2>
+  <p>Some sites enforce a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">Content Security Policy</a> that blocks external scripts and fetch requests. If your site has a CSP, the widget may fail silently.</p>
+
+  <h3>How to tell if CSP is blocking the widget</h3>
+  <p>Open your browser's developer tools (<kbd>F12</kbd> or <kbd>Cmd+Option+I</kbd>) and check the <strong>Console</strong> tab. CSP violations look like:</p>
+  <pre><code>Refused to load the script 'https://webrung.com/webrung.js' because it
+violates the following Content Security Policy directive: "script-src 'self'"</code></pre>
+  <p>You may also see blocked requests in the <strong>Network</strong> tab with status <code>(blocked:csp)</code>.</p>
+
+  <h3>How to fix it</h3>
+  <p>Allow <code id="csp-domain">webrung.com</code> in two CSP directives: <code>script-src</code> (to load the widget) and <code>connect-src</code> (to fetch <code>sites.json</code>).</p>
+
+  <p><strong>Via a <code>&lt;meta&gt;</code> tag in your HTML:</strong></p>
+  <pre><code id="csp-meta"></code></pre>
+
+  <p><strong>Via an HTTP header</strong> (Nginx, Netlify, Vercel, etc.):</p>
+  <p>Nginx:</p>
+  <pre><code id="csp-nginx"></code></pre>
+  <p>Netlify <code>_headers</code> file:</p>
+  <pre><code id="csp-netlify"></code></pre>
+  <p>Vercel <code>vercel.json</code>:</p>
+  <pre><code id="csp-vercel"></code></pre>
+
+  <p><strong>Important:</strong> Merge these directives with your existing CSP &mdash; don't replace your entire policy.</p>
+
+  <h3>Self-hosting as an alternative</h3>
+  <p>If you can't modify your CSP, you can self-host the widget:</p>
+  <ol class="steps" role="list">
+    <li>Download <code>webrung.js</code> and <code>sites.json</code> and place them on your own domain.</li>
+    <li>Reference your local copy instead:
+      <pre><code>&lt;script src="/webrung.js"&gt;&lt;/script&gt;</code></pre>
+    </li>
+  </ol>
+  <p>Since both files are served from your own origin, no CSP changes are needed. Note that <code>sites.json</code> won't auto-update when new members join.</p>
+
   <h2>Start Your Own Webring</h2>
   <p>Want to create your own webring? This project is open source. Fork the repository, update <code>sites.json</code> with your ring's name and members, and deploy to GitHub Pages.</p>
   <ol class="steps" role="list">
@@ -129,6 +169,7 @@
         var githubUrl = ring.github || "#";
         document.getElementById("github-link").href = githubUrl;
         document.getElementById("fork-link").href = githubUrl + "/fork";
+        document.getElementById("fork-link-join").href = githubUrl + "/fork";
 
         document.getElementById("snippet").textContent =
           '<script src="' + ringUrl + '/webrung.js"></' + 'script>';
@@ -138,6 +179,23 @@
 
         document.getElementById("snippet-custom").textContent =
           '<script src="' + ringUrl + '/webrung.js"\n  data-bg="#2d1b69" data-text="#e8e0ff" data-accent="#bb86fc"></' + 'script>';
+
+        var cspDomain = new URL(ringUrl).hostname;
+        document.getElementById("csp-domain").textContent = cspDomain;
+
+        var cspValue = "script-src 'self' " + ringUrl + "; connect-src 'self' " + ringUrl + ";";
+
+        document.getElementById("csp-meta").textContent =
+          '<meta http-equiv="Content-Security-Policy"\n  content="' + cspValue + '">';
+
+        document.getElementById("csp-nginx").textContent =
+          'add_header Content-Security-Policy "' + cspValue + '" always;';
+
+        document.getElementById("csp-netlify").textContent =
+          '/*\n  Content-Security-Policy: ' + cspValue;
+
+        document.getElementById("csp-vercel").textContent =
+          '{\n  "headers": [\n    {\n      "source": "/(.*)",\n      "headers": [\n        {\n          "key": "Content-Security-Policy",\n          "value": "' + cspValue + '"\n        }\n      ]\n    }\n  ]\n}';
 
         document.getElementById("snippet-responsive").textContent =
           '<script\n  id="webring-script"\n  src="' + ringUrl + '/webrung.js"\n  data-theme="light"></' + 'script>\n<script>\n  // Sync with your site\'s theme\n  var ws = document.getElementById("webring-script");\n  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {\n    ws.setAttribute("data-theme", "dark");\n  }\n</' + 'script>';
