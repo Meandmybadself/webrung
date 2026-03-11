@@ -1,0 +1,14 @@
+{
+  "ring": {
+    "name": "Webrung",
+    "url": "https://webrung.com",
+    "repo": "https://github.com/REPLACEOWNER/webrung"
+  },
+  "sites": [
+    {
+      "url": "https://example.com",
+      "name": "Example Site",
+      "description": "An example participant in the webring"
+    }
+  ]
+}

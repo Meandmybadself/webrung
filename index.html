@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Webrung</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 id="ring-name">Webrung</h1>
+  <p class="subtitle">A webring connecting interesting sites across the web.</p>
+
+  <h2>Sites</h2>
+  <ul class="sites-list" id="sites-list"></ul>
+
+  <h2>Join the Ring</h2>
+  <ol class="steps" role="list">
+    <li>
+      <strong>Add the widget to your site</strong>
+      Include this script tag before the closing <code>&lt;/body&gt;</code> tag on your website:
+      <pre><code id="snippet"></code></pre>
+    </li>
+    <li>
+      <strong>Submit a pull request</strong>
+      Add your site to <code>sites.json</code> in the
+      <a id="repo-link" href="#">GitHub repository</a>
+      with your site's URL, name, and description:
+      <pre><code>{
+  "url": "https://yoursite.com",
+  "name": "Your Site Name",
+  "description": "A short description of your site"
+}</code></pre>
+    </li>
+    <li>
+      <strong>That's it!</strong>
+      Once your pull request is merged, your site will appear in the ring and
+      visitors can discover it through any other member site.
+    </li>
+  </ol>
+
+  <h2>Customization</h2>
+  <p>The widget supports theming via data attributes on the script tag:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Attribute</th>
+        <th>Values</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>data-theme</code></td>
+        <td><code>light</code> (default), <code>dark</code></td>
+        <td>Built-in color theme</td>
+      </tr>
+      <tr>
+        <td><code>data-bg</code></td>
+        <td>Any CSS color</td>
+        <td>Background color override</td>
+      </tr>
+      <tr>
+        <td><code>data-text</code></td>
+        <td>Any CSS color</td>
+        <td>Text color override</td>
+      </tr>
+      <tr>
+        <td><code>data-accent</code></td>
+        <td>Any CSS color</td>
+        <td>Link color override</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Examples</h3>
+  <p>Dark theme:</p>
+  <pre><code id="snippet-dark"></code></pre>
+
+  <p>Custom colors:</p>
+  <pre><code id="snippet-custom"></code></pre>
+
+  <p>Responsive to your site's theme (using inline script):</p>
+  <pre><code id="snippet-responsive"></code></pre>
+
+  <footer>
+    <p id="footer-text"></p>
+  </footer>
+
+  <script>
+    fetch("sites.json")
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        var ring = data.ring;
+        var sites = data.sites;
+        var ringUrl = ring.url;
+        var ringName = ring.name;
+        var repoUrl = ring.repo || "#";
+
+        document.getElementById("page-title").textContent = ringName;
+        document.getElementById("ring-name").textContent = ringName;
+        document.getElementById("footer-text").textContent = ringName + " \u2014 connecting interesting corners of the web.";
+
+        var repoLink = document.getElementById("repo-link");
+        repoLink.href = repoUrl;
+
+        document.getElementById("snippet").textContent =
+          '<script src="' + ringUrl + '/webrung.js"></' + 'script>';
+
+        document.getElementById("snippet-dark").textContent =
+          '<script src="' + ringUrl + '/webrung.js" data-theme="dark"></' + 'script>';
+
+        document.getElementById("snippet-custom").textContent =
+          '<script src="' + ringUrl + '/webrung.js"\n  data-bg="#2d1b69" data-text="#e8e0ff" data-accent="#bb86fc"></' + 'script>';
+
+        document.getElementById("snippet-responsive").textContent =
+          '<script\n  id="webring-script"\n  src="' + ringUrl + '/webrung.js"\n  data-theme="light"></' + 'script>\n<script>\n  // Sync with your site\'s theme\n  var ws = document.getElementById("webring-script");\n  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {\n    ws.setAttribute("data-theme", "dark");\n  }\n</' + 'script>';
+
+        var list = document.getElementById("sites-list");
+        sites.forEach(function (site) {
+          var li = document.createElement("li");
+          var a = document.createElement("a");
+          a.className = "site-card";
+          a.href = site.url;
+          a.target = "_blank";
+          a.rel = "noopener";
+
+          var img = document.createElement("img");
+          var domain;
+          try { domain = new URL(site.url).hostname; } catch (e) { domain = ""; }
+          img.src = domain
+            ? "https://www.google.com/s2/favicons?domain=" + domain + "&sz=64"
+            : "";
+          img.alt = "";
+          img.width = 32;
+          img.height = 32;
+
+          var info = document.createElement("div");
+          info.className = "site-info";
+
+          var name = document.createElement("span");
+          name.className = "site-name";
+          name.textContent = site.name;
+
+          var desc = document.createElement("span");
+          desc.className = "site-description";
+          desc.textContent = site.description;
+
+          var url = document.createElement("span");
+          url.className = "site-url";
+          url.textContent = site.url;
+
+          info.appendChild(name);
+          info.appendChild(desc);
+          info.appendChild(url);
+
+          a.appendChild(img);
+          a.appendChild(info);
+          li.appendChild(a);
+          list.appendChild(li);
+        });
+      })
+      .catch(function () {
+        document.getElementById("ring-name").textContent = "Webrung";
+      });
+  </script>
+</body>
+</html>
