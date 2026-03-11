@@ -9,6 +9,11 @@
       "url": "https://meandmybadself.com",
       "name": "Me and My Bad Self",
       "description": "The miscellaneous work of Jeffery Bennett"
+    },
+    {
+      "url": "https://blog.matthewcanderson.com",
+      "name": "Matt's Blog",
+      "description": "Matt Anderson writes short, no-frills posts about tech, the practices he's exploring, and ideas that are sticking with him."
     }
   ]
 }
