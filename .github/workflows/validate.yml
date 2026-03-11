@@ -1,0 +1,16 @@
+name: Validate sites.json
+
+on:
+  pull_request:
+    paths: [sites.json]
+  push:
+    branches: [main]
+    paths: [sites.json]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON
+        run: python3 -m json.tool sites.json > /dev/null
