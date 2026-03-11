@@ -127,9 +127,13 @@
   shadow.appendChild(style);
   shadow.appendChild(container);
 
-  document.body.appendChild(bar);
+  function init() {
+    document.body.appendChild(bar);
+    loadSites();
+  }
 
-  fetch(ringUrl + "/sites.json")
+  function loadSites() {
+    fetch(ringUrl + "/sites.json")
     .then(function (res) {
       if (!res.ok) throw new Error("Failed to load sites.json");
       return res.json();
@@ -173,4 +177,11 @@
       separator.style.display = "none";
       randomLink.style.display = "none";
     });
+  }
+
+  if (document.body) {
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
 })();
