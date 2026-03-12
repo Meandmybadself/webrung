@@ -201,6 +201,14 @@ violates the following Content Security Policy directive: "script-src 'self'"</c
         document.getElementById("snippet-responsive").textContent =
           '<script\n  id="webring-script"\n  src="' + ringUrl + '/webrung.js"\n  data-theme="light"></' + 'script>\n<script>\n  // Sync with your site\'s theme\n  var ws = document.getElementById("webring-script");\n  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {\n    ws.setAttribute("data-theme", "dark");\n  }\n</' + 'script>';
 
+        // Fisher-Yates shuffle
+        for (var i = sites.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = sites[i];
+          sites[i] = sites[j];
+          sites[j] = tmp;
+        }
+
         var list = document.getElementById("sites-list");
         sites.forEach(function (site) {
           var li = document.createElement("li");

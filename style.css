@@ -195,3 +195,62 @@ footer {
   color: #999;
   font-size: 0.85em;
 }
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #1a1a1a;
+    color: #e0e0e0;
+  }
+
+  .subtitle {
+    color: #aaa;
+  }
+
+  h2 {
+    border-bottom-color: #333;
+  }
+
+  a {
+    color: #4da6ff;
+  }
+
+  .site-card {
+    border-color: #333;
+  }
+
+  .site-card:hover {
+    border-color: #4da6ff;
+    box-shadow: 0 2px 8px rgba(77, 166, 255, 0.15);
+  }
+
+  .site-description {
+    color: #aaa;
+  }
+
+  .site-url {
+    color: #777;
+  }
+
+  pre {
+    background: #252525;
+    border-color: #333;
+  }
+
+  p code,
+  td code {
+    background: #252525;
+  }
+
+  th {
+    background: #222;
+  }
+
+  th, td {
+    border-bottom-color: #333;
+  }
+
+  footer {
+    border-top-color: #333;
+    color: #777;
+  }
+}
